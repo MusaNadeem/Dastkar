@@ -1,0 +1,18 @@
+{
+  "name": "arts-crafts-marketplace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A web marketplace connecting independent Pakistani artists and craftspeople with buyers.",
+  "workspaces": [
+    "apps/web",
+    "apps/api"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/api & npm run dev --workspace=apps/web",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "build": "npm run build --workspace=apps/web",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "license": "UNLICENSED"
+}
