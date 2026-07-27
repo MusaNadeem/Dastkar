@@ -43,17 +43,21 @@ export default function Shop() {
   const { shop, products } = data;
   return (
     <div className="wrap" style={{ paddingBlock: 20, maxWidth: 820 }}>
-      <div className="img" style={{ height: 150 }}>
-        <img src={img(`shop-banner-workshop-${shop.id}`, 1400, 350)} alt={`${shop.name} workshop`} />
-      </div>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14, marginTop: -34, padding: '0 4px', marginBottom: 12 }}>
-        <div className="avatar" style={{ width: 66, height: 66, border: '3px solid var(--surface)' }}>
+      <div style={{ position: 'relative' }}>
+        <div className="img" style={{ height: 150 }}>
+          <img src={img(`shop-banner-workshop-${shop.id}`, 1400, 350)} alt={`${shop.name} workshop`} />
+        </div>
+        {/* Only the avatar overlaps the banner; name/status stay in normal flow below so they never sit on top of the photo. */}
+        <div
+          className="avatar"
+          style={{ width: 76, height: 76, border: '3px solid var(--surface)', position: 'absolute', left: 16, bottom: -30 }}
+        >
           {shop.profileImageUrl ? <img src={shop.profileImageUrl} alt="" /> : initials(shop.name)}
         </div>
-        <div style={{ paddingBottom: 4 }}>
-          <div className="h2">{shop.name}</div>
-          <div className="sm mut">{shop.status === 'active' ? 'Handmade to order' : shop.status}</div>
-        </div>
+      </div>
+      <div style={{ paddingTop: 42, paddingInline: 4, marginBottom: 12 }}>
+        <div className="h2">{shop.name}</div>
+        <div className="sm mut">{shop.status === 'active' ? 'Handmade to order' : shop.status}</div>
       </div>
       {shop.bio && <p className="sm" style={{ marginBottom: 16, lineHeight: 1.6 }}>{shop.bio}</p>}
 
