@@ -23,26 +23,8 @@ app.use(cors());
 app.use(express.json());
 
 // Health check works even without Supabase configured.
-// TEMP DIAGNOSTIC: reports which env var KEYS are present (booleans only, never values)
-// so a deploy-platform env-injection issue can be diagnosed without exposing secrets.
-// Remove the `env` block once deployment env vars are confirmed working.
 app.get('/health', (_req, res) =>
-  res.json({
-    status: 'ok',
-    supabaseConfigured: SUPABASE_CONFIGURED,
-    devAuth: isDevAuth(),
-    env: {
-      SUPABASE_URL: Boolean(process.env.SUPABASE_URL),
-      SUPABASE_PUBLISHABLE_KEY: Boolean(process.env.SUPABASE_PUBLISHABLE_KEY),
-      SUPABASE_SECRET_KEY: Boolean(process.env.SUPABASE_SECRET_KEY),
-      SUPABASE_JWKS_URL: Boolean(process.env.SUPABASE_JWKS_URL),
-      SUPABASE_ANON_KEY_legacy: Boolean(process.env.SUPABASE_ANON_KEY),
-      SUPABASE_SERVICE_ROLE_KEY_legacy: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
-      NODE_ENV: process.env.NODE_ENV || null,
-      PORT: process.env.PORT || null,
-      totalEnvKeyCount: Object.keys(process.env).length,
-    },
-  })
+  res.json({ status: 'ok', supabaseConfigured: SUPABASE_CONFIGURED, devAuth: isDevAuth() })
 );
 
 // Everything below needs a database.
