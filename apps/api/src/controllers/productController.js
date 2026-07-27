@@ -1,6 +1,6 @@
 import { supabaseAdmin } from '../db/client.js';
 import { toCamel } from '../lib/case.js';
-import { productCreateSchema, productUpdateSchema } from '../validation/schemas.js';
+import { productCreateSchema, productUpdateSchema, catalogQuerySchema } from '../validation/schemas.js';
 
 // Fetch a product with its owning shop's user_id, for ownership checks.
 async function findProductWithOwner(id) {
@@ -82,16 +82,38 @@ export async function deleteProduct(req, res) {
   res.json({ ok: true });
 }
 
-// GET /api/products  (public) — approved listings, newest first.
-export async function listProducts(_req, res) {
-  const { data, error } = await supabaseAdmin
+// GET /api/products  (public) — catalog: filter, search, sort, paginate. Approved only.
+// Query params: q, categoryId, minPrice, maxPrice, sort, page, pageSize.
+export async function listProducts(req, res) {
+  const raw = Object.fromEntries(Object.entries(req.query).filter(([, v]) => v !== ''));
+  const { q, categoryId, minPrice, maxPrice, sort, page, pageSize } = catalogQuerySchema.parse(raw);
+
+  // shops!inner + status filter hides listings from suspended/banned shops.
+  let query = supabaseAdmin
     .from('products')
-    .select('*, shops(id, name)')
+    .select('*, shops!inner(id, name, status)', { count: 'exact' })
     .eq('status', 'approved')
-    .order('created_at', { ascending: false })
-    .limit(60);
+    .eq('shops.status', 'active');
+
+  if (categoryId) query = query.eq('category_id', categoryId);
+  if (minPrice !== undefined) query = query.gte('price', minPrice);
+  if (maxPrice !== undefined) query = query.lte('price', maxPrice);
+  if (q) {
+    // Strip characters that would break the PostgREST or() grammar; we add our own wildcards.
+    const safe = q.replace(/[,()%*]/g, ' ').trim();
+    if (safe) query = query.or(`title.ilike.%${safe}%,description.ilike.%${safe}%`);
+  }
+
+  if (sort === 'price_asc') query = query.order('price', { ascending: true });
+  else if (sort === 'price_desc') query = query.order('price', { ascending: false });
+  else query = query.order('created_at', { ascending: false });
+
+  const from = (page - 1) * pageSize;
+  query = query.range(from, from + pageSize - 1);
+
+  const { data, count, error } = await query;
   if (error) throw error;
-  res.json({ products: toCamel(data || []) });
+  res.json({ products: toCamel(data || []), page, pageSize, total: count ?? 0 });
 }
 
 // GET /api/products/mine  (seller) — all statuses for the seller's shop.
@@ -111,7 +133,7 @@ export async function myProducts(req, res) {
 export async function getProduct(req, res) {
   const { data } = await supabaseAdmin
     .from('products')
-    .select('*, shops(id, name, bio, profile_image_url)')
+    .select('*, shops(id, name, user_id, bio, profile_image_url)')
     .eq('id', req.params.id)
     .eq('status', 'approved')
     .maybeSingle();

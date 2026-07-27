@@ -2,13 +2,21 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth.js';
 import { requireRole } from '../middleware/requireRole.js';
+import { asyncHandler } from '../lib/asyncHandler.js';
+import {
+  createReport,
+  listReports,
+  takedown,
+  dismiss,
+  counterNotice,
+} from '../controllers/ipReportController.js';
 
 const router = Router();
 
-router.post('/', (_req, res) => res.status(501).json({ error: 'Not implemented' }));                              // public: file a report
-router.get('/', requireAuth, requireRole('admin'), (_req, res) => res.status(501).json({ error: 'Not implemented' }));            // admin queue
-router.post('/:id/takedown', requireAuth, requireRole('admin'), (_req, res) => res.status(501).json({ error: 'Not implemented' })); // hide + strike++
-router.post('/:id/dismiss', requireAuth, requireRole('admin'), (_req, res) => res.status(501).json({ error: 'Not implemented' }));
-router.post('/:id/counter-notice', requireAuth, requireRole('seller'), (_req, res) => res.status(501).json({ error: 'Not implemented' }));
+router.post('/', asyncHandler(createReport)); // public: anyone can file a report
+router.get('/', requireAuth, requireRole('admin'), asyncHandler(listReports));
+router.post('/:id/takedown', requireAuth, requireRole('admin'), asyncHandler(takedown));
+router.post('/:id/dismiss', requireAuth, requireRole('admin'), asyncHandler(dismiss));
+router.post('/:id/counter-notice', requireAuth, requireRole('seller'), asyncHandler(counterNotice));
 
 export default router;

@@ -1,18 +1,34 @@
-// Custom order lifecycle: request → quote → deposit → progress → revision(≤2) → balance. Sprint 4.
-// Money-adjacent — audit every state transition.
+// Custom order lifecycle: request -> quote -> deposit -> progress/final photos ->
+// revision(<=2) -> balance -> completed -> shipped. Sprint 4. Money-adjacent, audited.
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth.js';
 import { requireRole } from '../middleware/requireRole.js';
+import { asyncHandler } from '../lib/asyncHandler.js';
+import {
+  createRequest,
+  myRequests,
+  incomingRequests,
+  quote,
+  decline,
+  payDeposit,
+  uploadPhotos,
+  requestRevision,
+  payBalance,
+  shipCustom,
+} from '../controllers/customOrderController.js';
 
 const router = Router();
 
-router.post('/', requireAuth, (_req, res) => res.status(501).json({ error: 'Not implemented' }));                 // buyer request
-router.get('/incoming', requireAuth, requireRole('seller'), (_req, res) => res.status(501).json({ error: 'Not implemented' }));
-router.post('/:id/quote', requireAuth, requireRole('seller'), (_req, res) => res.status(501).json({ error: 'Not implemented' }));
-router.post('/:id/decline', requireAuth, requireRole('seller'), (_req, res) => res.status(501).json({ error: 'Not implemented' }));
-router.post('/:id/deposit', requireAuth, (_req, res) => res.status(501).json({ error: 'Not implemented' }));      // approve + pay deposit
-router.post('/:id/photos', requireAuth, requireRole('seller'), (_req, res) => res.status(501).json({ error: 'Not implemented' })); // progress/final
-router.post('/:id/revision', requireAuth, (_req, res) => res.status(501).json({ error: 'Not implemented' }));     // max 2 rounds
-router.post('/:id/balance', requireAuth, (_req, res) => res.status(501).json({ error: 'Not implemented' }));      // pay balance
+router.post('/', requireAuth, asyncHandler(createRequest)); // buyer request
+router.get('/mine', requireAuth, asyncHandler(myRequests)); // buyer view
+router.get('/incoming', requireAuth, requireRole('seller'), asyncHandler(incomingRequests)); // seller view
+
+router.post('/:id/quote', requireAuth, requireRole('seller'), asyncHandler(quote));
+router.post('/:id/decline', requireAuth, requireRole('seller'), asyncHandler(decline));
+router.post('/:id/deposit', requireAuth, asyncHandler(payDeposit)); // buyer approve + deposit
+router.post('/:id/photos', requireAuth, requireRole('seller'), asyncHandler(uploadPhotos)); // progress/final
+router.post('/:id/revision', requireAuth, asyncHandler(requestRevision)); // buyer, max 2
+router.post('/:id/balance', requireAuth, asyncHandler(payBalance)); // buyer approve final + balance
+router.post('/:id/ship', requireAuth, requireRole('seller'), asyncHandler(shipCustom));
 
 export default router;

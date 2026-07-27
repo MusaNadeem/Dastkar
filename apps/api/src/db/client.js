@@ -9,8 +9,10 @@ import WebSocket from 'ws';
 if (!globalThis.WebSocket) globalThis.WebSocket = WebSocket;
 
 const url = process.env.SUPABASE_URL;
-const anonKey = process.env.SUPABASE_ANON_KEY;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Supabase's new API keys (sb_publishable_ / sb_secret_) replace anon / service_role.
+// Prefer the new names, fall back to the legacy ones.
+const anonKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
+const serviceRoleKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export const SUPABASE_CONFIGURED = Boolean(url && serviceRoleKey);
 

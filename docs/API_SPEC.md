@@ -22,42 +22,48 @@ Legend: 🔓 public · 🔑 authenticated · 🎨 seller · 🛡️ admin
 - `POST /api/shops` 🔑 — create shop (requires IP declaration)
 - `GET  /api/shops/:id` 🔓 — public shop profile
 
-### Products — *Sprint 1–2*
+### Categories — *Sprint 2* ✅
+- `GET /api/categories` 🔓 — all categories (id, name)
+
+### Products — *Sprint 1–2* ✅
 - `POST   /api/products` 🎨
 - `PATCH  /api/products/:id` 🎨
 - `DELETE /api/products/:id` 🎨
-- `GET    /api/products` 🔓 — list/filter/search/sort/paginate (`?category=&min=&max=&sort=&q=&page=`)
-- `GET    /api/products/:id` 🔓
+- `GET    /api/products/mine` 🎨 — seller's own products (any status)
+- `GET    /api/products` 🔓 — catalog. Query: `?q=&categoryId=&minPrice=&maxPrice=&sort=newest|price_asc|price_desc&page=&pageSize=`. Returns `{ products, page, pageSize, total }`
+- `GET    /api/products/:id` 🔓 — approved only
 
-### Admin — *Sprint 1, 5*
+### Admin — *Sprint 1, 5* ✅
 - `GET   /api/admin/products/pending` 🛡️
 - `POST  /api/admin/products/:id/approve` 🛡️
 - `POST  /api/admin/products/:id/reject` 🛡️
-- `GET   /api/admin/analytics` 🛡️
-- `GET   /api/admin/shops` 🛡️
-- `POST  /api/admin/shops/:id/status` 🛡️ — manual suspend/ban override
+- `GET   /api/admin/analytics` 🛡️ — `{ sellers, products, approvedProducts, orders, gmv }`
+- `GET   /api/admin/shops` 🛡️ — shops with status, strikes, owner
+- `POST  /api/admin/shops/:id/status` 🛡️ — `{ status:'active'|'suspended'|'banned' }` manual override
 
-### Orders — *Sprint 3*
-- `POST  /api/orders` 🔑 — checkout (COD or simulated)
-- `POST  /api/orders/:id/pay` 🔑 — simulated payment success/fail
-- `GET   /api/orders/mine` 🔑 — buyer orders
-- `GET   /api/orders/incoming` 🎨 — seller's incoming orders
-- `POST  /api/orders/:id/ship` 🎨 — set tracking number
-- `POST  /api/orders/:id/deliver` 🔑 — buyer confirm delivery
+### Orders — *Sprint 3* ✅
+- `POST  /api/orders` 🔑 — checkout. Body `{ items:[{productId,quantity}], shippingAddress, paymentMethod:'cod'|'simulated_digital' }`. Total computed server-side; COD → confirmed + stock decremented, simulated → pending awaiting `/pay`.
+- `POST  /api/orders/:id/pay` 🔑 — simulated gateway. Body `{ outcome:'success'|'fail' }`. success → paid/confirmed + stock decremented; fail → failed/cancelled.
+- `GET   /api/orders/mine` 🔑 — buyer orders (with items)
+- `GET   /api/orders/incoming` 🎨 — seller's incoming orders (confirmed+)
+- `POST  /api/orders/:id/ship` 🎨 — body `{ trackingNumber }`; confirmed → shipped
+- `POST  /api/orders/:id/deliver` 🔑 — shipped → delivered
 
-### Custom Orders — *Sprint 4*
-- `POST  /api/custom-orders` 🔑 — buyer request
-- `GET   /api/custom-orders/incoming` 🎨
-- `POST  /api/custom-orders/:id/quote` 🎨
-- `POST  /api/custom-orders/:id/decline` 🎨
-- `POST  /api/custom-orders/:id/deposit` 🔑 — approve + pay deposit
-- `POST  /api/custom-orders/:id/photos` 🎨 — progress/final uploads
-- `POST  /api/custom-orders/:id/revision` 🔑 — request revision (max 2)
-- `POST  /api/custom-orders/:id/balance` 🔑 — pay balance
+### Custom Orders — *Sprint 4* ✅
+- `POST  /api/custom-orders` 🔑 — buyer request `{ sellerId, description, budgetRange?, referenceImageUrls? }`
+- `GET   /api/custom-orders/mine` 🔑 — buyer's requests
+- `GET   /api/custom-orders/incoming` 🎨 — seller's requests
+- `POST  /api/custom-orders/:id/quote` 🎨 — `{ quotedPrice }`; pending → quoted
+- `POST  /api/custom-orders/:id/decline` 🎨 — → declined
+- `POST  /api/custom-orders/:id/deposit` 🔑 — `{ outcome, shippingAddress }`; 40% deposit, creates linked order, → deposit_paid
+- `POST  /api/custom-orders/:id/photos` 🎨 — `{ type:'progress'|'final', imageUrls }`; first progress → in_progress
+- `POST  /api/custom-orders/:id/revision` 🔑 — request revision, max 2
+- `POST  /api/custom-orders/:id/balance` 🔑 — `{ outcome }`; approve final + pay balance → completed
+- `POST  /api/custom-orders/:id/ship` 🎨 — `{ trackingNumber }`; completed → shipped (buyer then confirms via `/orders/:id/deliver`)
 
-### IP Reports — *Sprint 5*
-- `POST  /api/ip-reports` 🔓 — file a report
-- `GET   /api/ip-reports` 🛡️ — admin queue
-- `POST  /api/ip-reports/:id/takedown` 🛡️ — hide product + increment strike
+### IP Reports — *Sprint 5* ✅
+- `POST  /api/ip-reports` 🔓 — file a report `{ reporterName, reporterEmail, reportedProductId, reason, evidenceUrl? }`
+- `GET   /api/ip-reports` 🛡️ — admin queue (open first, with product + shop)
+- `POST  /api/ip-reports/:id/takedown` 🛡️ — hide product + strike + three-strikes (2 → suspend, 3 → ban)
 - `POST  /api/ip-reports/:id/dismiss` 🛡️
-- `POST  /api/ip-reports/:id/counter-notice` 🎨 — seller contest
+- `POST  /api/ip-reports/:id/counter-notice` 🎨 — seller (owner) contests → report re-opens flagged disputed

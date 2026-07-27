@@ -34,11 +34,18 @@ export async function requireAuth(req, res, next) {
     const token = header.startsWith('Bearer ') ? header.slice(7) : null;
     if (!token) return res.status(401).json({ error: 'Missing bearer token' });
 
-    const { data, error } = await supabaseForToken(token).auth.getUser();
+    // Pass the token explicitly so verification does not depend on client session state.
+    const { data, error } = await supabaseForToken(token).auth.getUser(token);
     if (error || !data?.user) return res.status(401).json({ error: 'Invalid or expired token' });
 
+    const meta = data.user.user_metadata || {};
     req.token = token;
-    req.user = { id: data.user.id, email: data.user.email, role: await loadRole(data.user.id) };
+    req.user = {
+      id: data.user.id,
+      email: data.user.email,
+      fullName: meta.full_name || meta.name || null,
+      role: await loadRole(data.user.id),
+    };
     next();
   } catch (err) {
     next(err);

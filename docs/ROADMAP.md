@@ -12,7 +12,7 @@ Each week = one sprint, ends in a working demo. A week is not "done" until its *
 - **Deliverables:** project setup + CI/CD, full DB schema + RLS + seeded categories, Google auth, role selection, seller onboarding with IP declaration, role-based route protection, product CRUD with watermarked images, seller dashboard shell, public shop page, admin approval queue.
 - **Milestone:** `M1 — Seller-to-shelf loop`
 - **Exit gate:** seller signs up → shop → lists product → admin approves → public shop page shows it.
-
+npx skills add https://github.com/Leonxlnx/taste-skill --skill "design-taste-frontend"
 ### Week 2 — Buyer Experience
 - **Deliverables:** homepage, catalog (category/price filters, sort, pagination), keyword search, product detail page with gallery, cart.
 - **Milestone:** `M2 — Discoverable catalog`
