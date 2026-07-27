@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Reveal from './Reveal.jsx';
 import { img } from '../../lib/img.js';
 
@@ -20,7 +21,7 @@ export default function CustomOrders() {
           <div className="custom-flow">
             {FLOW.map((f) => <span key={f}>{f}</span>)}
           </div>
-          <a className="btn btn-primary" href="#categories">Browse the marketplace</a>
+          <Link className="btn btn-primary" to="/catalog">Browse the marketplace</Link>
         </div>
       </div>
     </section>

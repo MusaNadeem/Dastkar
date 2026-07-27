@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { img } from '../../lib/img.js';
 
 export default function SellerCta() {
@@ -11,7 +12,7 @@ export default function SellerCta() {
             List in minutes, manage every order from one dashboard, and get paid without chasing
             bank-transfer screenshots. Founding makers pay zero commission for the first six months.
           </p>
-          <a className="btn btn-invert" href="#sell">Sell your work</a>
+          <Link className="btn btn-invert" to="/login">Sell your work</Link>
         </div>
       </div>
     </section>

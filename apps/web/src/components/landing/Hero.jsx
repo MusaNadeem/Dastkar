@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Reveal from './Reveal.jsx';
 import { img } from '../../lib/img.js';
 
@@ -14,8 +15,8 @@ export default function Hero() {
             No DMs, no guesswork, no lost orders.
           </p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href="#categories">Browse the marketplace</a>
-            <a className="btn btn-secondary" href="#sell">Sell your work</a>
+            <Link className="btn btn-primary" to="/catalog">Browse the marketplace</Link>
+            <Link className="btn btn-secondary" to="/login">Sell your work</Link>
           </div>
         </div>
 

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function FinalCta() {
   return (
     <section className="section final">
@@ -5,8 +7,8 @@ export default function FinalCta() {
         <h2>Bring Pakistan's handmade online.</h2>
         <p>Whether you make it or you are looking for it, this is the place to start.</p>
         <div className="final-actions">
-          <a className="btn btn-invert" href="#categories">Browse the marketplace</a>
-          <a className="btn btn-ghost-invert" href="#sell">Sell your work</a>
+          <Link className="btn btn-invert" to="/catalog">Browse the marketplace</Link>
+          <Link className="btn btn-ghost-invert" to="/login">Sell your work</Link>
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 // Brand config - single source so the whole template re-skins from one place.
-// "Kaarigar" (Urdu: the artisan/craftsperson) is a placeholder name for the build; swap freely.
+// "Dastkar" (Urdu: artisan / craftsperson).
 export const BRAND = {
-  name: 'Kaarigar',
+  name: 'Dastkar',
   tagline: "Handmade goods, straight from Pakistan's makers.",
   cities: ['Lahore', 'Karachi', 'Islamabad', 'Multan'],
 };

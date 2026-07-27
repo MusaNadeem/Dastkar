@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Reveal from './Reveal.jsx';
 import { img } from '../../lib/img.js';
 
@@ -25,13 +26,13 @@ export default function CategoryBento() {
 
         <Reveal className="bento">
           {CATEGORIES.map((c) => (
-            <a key={c.key} className={`tile ${c.cls}`} href={`#categories`} aria-label={c.name}>
+            <Link key={c.key} className={`tile ${c.cls}`} to="/catalog" aria-label={c.name}>
               <img src={img(c.seed, c.w, c.h)} alt="" loading="lazy" />
               <div className="tile-body">
                 <h3>{c.name}</h3>
                 <p>{c.blurb}</p>
               </div>
-            </a>
+            </Link>
           ))}
         </Reveal>
       </div>

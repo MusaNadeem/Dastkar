@@ -1,12 +1,19 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BRAND } from '../../lib/brand.js';
 
 const LINKS = [
-  { label: 'Browse', href: '#categories' },
+  { label: 'Browse', href: '/catalog' },
   { label: 'How it works', href: '#how' },
   { label: 'Custom orders', href: '#custom' },
   { label: 'For makers', href: '#sell' },
 ];
+
+// Section anchors stay as <a>; app routes use client-side <Link>.
+function NavItem({ href, label, onClick, className }) {
+  if (href.startsWith('/')) return <Link to={href} onClick={onClick} className={className}>{label}</Link>;
+  return <a href={href} onClick={onClick} className={className}>{label}</a>;
+}
 
 export default function SiteNav() {
   const [open, setOpen] = useState(false);
@@ -16,11 +23,11 @@ export default function SiteNav() {
         <a className="nav-logo" href="#top">{BRAND.name.slice(0, -3)}<b>{BRAND.name.slice(-3)}</b></a>
 
         <nav className="nav-links" aria-label="Primary">
-          {LINKS.map((l) => <a key={l.href} href={l.href}>{l.label}</a>)}
+          {LINKS.map((l) => <NavItem key={l.href} href={l.href} label={l.label} />)}
         </nav>
 
         <div className="nav-cta">
-          <a className="btn btn-secondary" href="#sell">Sell your work</a>
+          <Link className="btn btn-secondary" to="/login">Sell your work</Link>
         </div>
 
         <button
@@ -37,9 +44,9 @@ export default function SiteNav() {
         <div className="container">
           <nav className="nav-mobile" aria-label="Mobile">
             {LINKS.map((l) => (
-              <a key={l.href} href={l.href} onClick={() => setOpen(false)}>{l.label}</a>
+              <NavItem key={l.href} href={l.href} label={l.label} onClick={() => setOpen(false)} />
             ))}
-            <a className="btn btn-primary" href="#sell" onClick={() => setOpen(false)}>Sell your work</a>
+            <Link className="btn btn-primary" to="/login" onClick={() => setOpen(false)}>Sell your work</Link>
           </nav>
         </div>
       )}

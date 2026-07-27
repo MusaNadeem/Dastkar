@@ -13,22 +13,21 @@
   --section-y: clamp(72px, 11vw, 148px);
   --gutter: clamp(20px, 5vw, 48px);
 
-  /* Neutrals - cool slate (deliberately NOT warm cream/beige) */
-  --bg: #f4f5f6;
+  /* Neutrals - warm greige, matched to the app theme (app.css .dk) */
+  --bg: #f4f2ec;
   --surface: #ffffff;
-  --surface-2: #eceef1;
-  --ink: #1b1e24;
-  --ink-2: #565c66;
-  --ink-3: #878e99;
-  --line: #e2e4e8;
-  --line-strong: #d2d6dc;
+  --surface-2: #faf9f6;
+  --ink: #2a2a28;
+  --ink-2: #6f6d68;
+  --ink-3: #9a968f;
+  --line: #eae7e1;
+  --line-strong: #d4d0c8;
 
-  /* Accent - terracotta (the single accent). Fill vs text kept as accessible
-     shades of the same hue so contrast passes without introducing a 2nd color. */
-  --accent: #c24a2e;          /* button fill - white text on this = 4.8:1 (AA) */
-  --accent-deep: #9e3a22;     /* fill hover */
-  --accent-text: #a83e22;     /* terracotta as text/link on light bg - AA */
-  --accent-soft: #f6e3db;     /* tint background */
+  /* Accent - terracotta, matched to the app theme */
+  --accent: #c26a4a;          /* button fill */
+  --accent-deep: #b3573a;     /* fill hover */
+  --accent-text: #b3573a;     /* terracotta text/link on light bg */
+  --accent-soft: #f6e6df;     /* tint background */
   --on-accent: #ffffff;
 
   /* Radius */
@@ -37,10 +36,10 @@
   --r-input: 10px;
   --r-pill: 999px;
 
-  /* Shadows - tinted to the ink hue, never pure black (skill 4.4) */
-  --shadow-sm: 0 1px 2px rgba(27, 30, 36, 0.05), 0 2px 6px rgba(27, 30, 36, 0.05);
-  --shadow-md: 0 10px 30px -12px rgba(27, 30, 36, 0.18);
-  --shadow-lg: 0 30px 70px -28px rgba(27, 30, 36, 0.30);
+  /* Shadows - tinted to the warm ink hue */
+  --shadow-sm: 0 1px 2px rgba(42, 42, 40, 0.05), 0 2px 6px rgba(42, 42, 40, 0.05);
+  --shadow-md: 0 10px 30px -12px rgba(42, 42, 40, 0.16);
+  --shadow-lg: 0 30px 70px -28px rgba(42, 42, 40, 0.26);
 
   /* Type - sans display by default (skill 4.1: serif is not the default).
      Swap --font-display for a real webfont (Geist / Cabinet Grotesk) later. */
@@ -50,28 +49,7 @@
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #131519;
-    --surface: #1a1d23;
-    --surface-2: #0e1013;
-    --ink: #ecedf0;
-    --ink-2: #a6acb6;
-    --ink-3: #7a818c;
-    --line: #262a31;
-    --line-strong: #333843;
-
-    --accent: #c24a2e;         /* same fill hue - white text still AA */
-    --accent-deep: #d2542f;
-    --accent-text: #e8795c;    /* brightened terracotta text for dark bg - AA */
-    --accent-soft: #2a1c17;
-    --on-accent: #ffffff;
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 12px 34px -14px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 34px 80px -30px rgba(0, 0, 0, 0.75);
-  }
-}
+/* Light-only, to match the app theme (no dark-mode flip). */
 
 * { box-sizing: border-box; }
 
