@@ -7,25 +7,37 @@
 // Categories with no good real-photo match found after extensive searching
 // (calligraphy, painting/fine art) fall back to the general craft/handicraft set
 // rather than ship a wrong image.
+// NOTE: the original "pottery"/"ceramic" tag combos (lock 101, 108) broke on
+// loremflickr's end after initially verifying good — the whole tag index started
+// 500ing, not just those locks. Swapped to "stoneware". This is a live illustration
+// of why hotlinked third-party placeholder images are not launch-safe; see
+// docs/MARKET_READINESS.md item 9.
 const POOLS = {
-  // NOTE: the original "pottery"/"ceramic" tag combos (lock 101, 108) broke on
-  // loremflickr's end after initially verifying good — the whole tag index started
-  // 500ing, not just those locks. Swapped to "stoneware", which was re-verified
-  // working. This is a live illustration of why hotlinked third-party placeholder
-  // images are not launch-safe; see docs/MARKET_READINESS.md item 9.
+  // "stoneware" only has ~2 genuinely distinct photos in loremflickr's pool — further
+  // locks started repeating these same two, so this category is capped at 2.
   pottery: [
     { tag: 'stoneware', lock: 2004 },
     { tag: 'stoneware', lock: 2005 },
   ],
-  jewelry: [{ tag: 'jewelry', lock: 102 }],
-  resin: [{ tag: 'resin', lock: 104 }],
+  jewelry: [
+    { tag: 'jewelry', lock: 102 },
+    { tag: 'jewelry', lock: 4001 },
+    { tag: 'jewelry', lock: 4003 },
+  ],
+  resin: [
+    { tag: 'resin', lock: 104 },
+    { tag: 'resin', lock: 5004 },
+  ],
   weaving: [
     { tag: 'weaving', lock: 105 },
-    { tag: 'handicraft', lock: 107 },
+    { tag: 'weaving', lock: 5002 },
   ],
   handicraft: [
     { tag: 'handicraft', lock: 107 },
     { tag: 'craftsman,hands', lock: 405 },
+    { tag: 'handicraft', lock: 6001 },
+    { tag: 'handicraft', lock: 6002 },
+    { tag: 'craftsman,hands', lock: 6003 },
   ],
   portrait: [{ tag: 'craftsman,hands', lock: 405 }],
 };
