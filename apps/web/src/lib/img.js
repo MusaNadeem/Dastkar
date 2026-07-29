@@ -8,9 +8,14 @@
 // (calligraphy, painting/fine art) fall back to the general craft/handicraft set
 // rather than ship a wrong image.
 const POOLS = {
+  // NOTE: the original "pottery"/"ceramic" tag combos (lock 101, 108) broke on
+  // loremflickr's end after initially verifying good — the whole tag index started
+  // 500ing, not just those locks. Swapped to "stoneware", which was re-verified
+  // working. This is a live illustration of why hotlinked third-party placeholder
+  // images are not launch-safe; see docs/MARKET_READINESS.md item 9.
   pottery: [
-    { tag: 'pottery', lock: 101 },
-    { tag: 'ceramic', lock: 108 },
+    { tag: 'stoneware', lock: 2004 },
+    { tag: 'stoneware', lock: 2005 },
   ],
   jewelry: [{ tag: 'jewelry', lock: 102 }],
   resin: [{ tag: 'resin', lock: 104 }],
